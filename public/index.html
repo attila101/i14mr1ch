@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/css.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <script type="text/javascript" src="assets/script/richscript.js"></script>
+</head>
+
+<body onload="loadHomePage()">
+    <div id="homepage">
+        <div class="main_phrase">
+            ARE YOU RICH?
+        </div>
+        <div class="container pagination-centered">
+            <button class="btn" id="yes" onclick="areyousure('homepage')">
+                YES
+            </button>
+            <button class="btn" id="no" onclick='theyare("homepage")'>
+                NO
+            </button>
+        </div>
+    </div>
+    <div id="areyousure" style="display: none">
+        <div class="main_phrase">
+            PROVE IT
+        </div>
+        <div class="container pagination-centered">
+            <div class="btn" onclick="iamrich('areyousure')">
+                CONTINUE
+            </div>
+        </div>
+    </div>
+    <div id="iamrich" style="display: none">
+        <div class="richest_header" id="introduction_phrase">
+        </div>
+        <div class="container pagination-centered yesno">
+            <button class="btn" id="yes" onclick='payment("iamrich")'>
+                YES
+            </button>
+            <button class="btn" id="no" onclick='theyare("iamrich")'>
+                NO
+            </button>
+        </div>
+    </div>
+    <div id="theyare" style="display: none">
+        <div class="main_phrase_new">
+            WELL IF YOU'RE NOT... THEY ARE
+        </div>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Paid</th>
+                    <th scope="col">Says</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+            </tbody>
+        </table>
+        <div class="canyouaffordmore"> ARE YOU SURE YOU CAN'T AFFORD MORE?</div>
+        <div class="container yesno pagination-centered">
+            <button class="btn" id="yes" onclick='okyouarepoor("theyare")'>
+                YES
+            </button>
+            <button class="btn" id="no" onclick='payment("theyare")'>
+                NO
+            </button>
+        </div>
+    </div>
+    <div class="main_phrase" id="okyouarepoor" style="display: none;">
+        OK, YOU ARE A POOR MAN
+    </div>
+    <div class="pay" id="pay" style="display: none;">
+        <div class="container pagination-centered" style="display: block">
+            <div class="form-group">
+                <label class="richest_header" for="amount">ENTER AMOUNT</label>
+                <input type="number" class="form-control amount-field" id="amount" placeholder="Amount" name="amountField">
+                <input type="text" class="form-control amount-field" id="nickname" placeholder="Nickname (max 40 characters)" maxlength="40">
+                <input type="text" class="form-control amount-field" id="description" placeholder="Leave your message... (max 70 characters)" name="Description" maxlength="70">
+            </div>
+            <div class="container nomargin">
+                <div id="paypal-button" class="paypal_class"></div>
+            </div>
+            <div class=" container margin20">
+                <div class="alert alert-danger" id="warning" style="display: none">OOPS! Looks like something went wrong during payment!</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

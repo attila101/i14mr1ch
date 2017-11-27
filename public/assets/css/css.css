@@ -1,0 +1,99 @@
+body {
+    background: #000;
+    font-family: Lato;
+}
+
+.main_phrase {
+    text-align: center;
+    color: #fff;
+    font-weight: 1000;
+    font-size: 50px;
+    margin-top: 200px;
+}
+
+.container {
+    margin-top: 150px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    background-color: transparent;
+    color: #fff;
+    font-size: 25px;
+    font-weight: 900;
+    display: inline-block;
+}
+
+.top_header_people {
+    text-align: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 30px;
+    margin-top: 0px;
+}
+
+.richest_header {
+    text-align: center;
+    color: #fff;
+    font-weight: 1000;
+    font-size: 50px;
+    margin-top: 50px;
+}
+
+.richest {
+    color: #DBA901;
+    font-size: 70px;
+}
+
+.payment {
+    color: #DBA901;
+    font-size: 40px;
+}
+
+.yesno {
+    margin-top: 0px;
+}
+
+.table {
+    margin-top: 50px;
+}
+
+.main_phrase_new {
+    text-align: center;
+    color: #fff;
+    font-weight: 1000;
+    font-size: 50px;
+    margin-top: 80px;
+}
+
+.canyouaffordmore {
+    text-align: center;
+    color: #fff;
+    font-weight: 1000;
+    font-size: 30px;
+    margin-top: 50px;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+.amount-field {
+    background-color: black;
+    border-radius: 0;
+    border-width: 5px;
+    border-color: #fff;
+    font-size: 30px;
+    color: #DBA901;
+    font-weight: 1000;
+}
+.nomargin{
+    margin:0px;
+}
+.alert-warning{
+    margin-left: 20px;
+}
+.margin20{
+    margin:20px;
+}
