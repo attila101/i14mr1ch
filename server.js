@@ -12,6 +12,14 @@ const sqlDb = sqlDbFactory({
     }
 });
 
+//Setting directory to tell express where to find public files
+app.use(express.static(__dirname + "/public"));
+
+//Register REST entry point
+//app.set("port", serverPort);
+
+
+
 
 
 
@@ -20,18 +28,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-//Setting server port
-const serverPort = 12217;
-//Setting directory to tell express where to find public files
-app.use(express.static(__dirname + "/public"));
 
-//Register REST entry point
-//app.set("port", serverPort);
 
-// Start the server on port 5000 
-app.listen(serverPort, function() {
-    console.log(`Your app is ready at port ${serverPort}`);
-});
 
 app.get("/getRichest", function(req, res) {
     const myQuery = sqlDb("donations");
@@ -46,3 +44,10 @@ app.post("/newPayment",function(req,res){
 });
 
 app.get("/execute-payment", function(req, res){}); //This will be the entry point for after transaction complete */
+
+//Setting server port
+const serverPort = 8080;
+// Start the server on port 5000 
+app.listen(serverPort, function() {
+    console.log(`Your app is ready at port ${serverPort}`);
+});
