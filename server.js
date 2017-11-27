@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 //Setting server port
-const serverPort = 12216;
+const serverPort = 12217;
 //Setting directory to tell express where to find public files
 app.use(express.static(__dirname + "/public"));
 
