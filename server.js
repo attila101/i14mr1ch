@@ -39,7 +39,7 @@ app.post("/newPayment",function(req,res){
 app.get("/execute-payment", function(req, res){}); //This will be the entry point for after transaction complete */
 
 //Setting server port
-const serverPort = 12216;
+const serverPort = 12933;
 // Start the server on port 5000 
 app.listen(serverPort, function() {
     console.log(`Your app is ready at port ${serverPort}`);
