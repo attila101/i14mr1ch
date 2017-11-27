@@ -21,12 +21,12 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 //Setting server port
-const serverPort = process.env.PORT || 443;
+const serverPort = 12216;
 //Setting directory to tell express where to find public files
 app.use(express.static(__dirname + "/public"));
 
 //Register REST entry point
-app.set("port", serverPort);
+//app.set("port", serverPort);
 
 // Start the server on port 5000 
 app.listen(serverPort, function() {
