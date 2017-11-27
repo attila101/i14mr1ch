@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 //Setting server port
-let serverPort = process.env.PORT || 443;
+const serverPort = process.env.PORT || 443;
 //Setting directory to tell express where to find public files
 app.use(express.static(__dirname + "/public"));
 
@@ -34,7 +34,7 @@ app.listen(serverPort, function() {
 });
 
 app.get("/getRichest", function(req, res) {
-    let myQuery = sqlDb("donations");
+    const myQuery = sqlDb("donations");
     myQuery.then(result => {
         res.send(JSON.stringify(result));
     });
