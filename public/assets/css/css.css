@@ -88,6 +88,16 @@ body {
     color: #DBA901;
     font-weight: 1000;
 }
+
+.amount-field:focus {
+    background-color: black;
+    border-radius: 0;
+    border-width: 5px;
+    border-color: #DBA901;
+    font-size: 30px;
+    color: #DBA901;
+    font-weight: 1000;
+}
 .nomargin{
     margin:0px;
 }

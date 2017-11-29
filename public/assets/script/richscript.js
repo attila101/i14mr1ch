@@ -105,6 +105,8 @@ function payment(todelete) {
                             }
                         ]
                     };
+                    //I'd do this in a different way: send the amount_tot value to server, the server checks, and then it
+                    //sends back the json ready for the payment transaction
                 if(amount_tot > richest_amount){
                     console.log("EXECUTING PAYPAL REQUEST");
                     return actions.payment.create(payment_json);
@@ -120,9 +122,9 @@ function payment(todelete) {
                 if(payment.transactions[0].amount.total == amount_tot){
                     console.log("AUTHORIZED");
                     var post_json = {
-                        "nickname" = nickname,
-                        "description" = description,
-                        "amount" = payment.transactions[0].amount.total
+                        "nickname" : nickname,
+                        "description" : description,
+                        "amount" : payment.transactions[0].amount.total
                     }
                     $.ajax({
                       type: "POST",
@@ -133,6 +135,8 @@ function payment(todelete) {
                         //SHOW A NICE PAGE
                         }
                     });
+                } else {
+                	//Handle the case where the store amount is different from the one actually paid here.
                 }
             });
         },
