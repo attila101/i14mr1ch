@@ -96,40 +96,30 @@ function payment(todelete) {
                 nickname = $("#nickname");
                 //email = $("#email");
 
-                var payment_json = {
+                    var post_json = {
+                        "nickname" : nickname,
+                        "description" : description,
+                        "amount" : amount_tot,
+                        "oldAmount" : richest_amount
+                    };
+                    //callPayment(data);
+                    return post_json;
+                }).then(function(data){
+                    var payment_json = {
                         transactions: [
                             {
                                 amount: {
-                                    total:    amount_tot,
+                                    total:    data.amount,
                                     currency: 'EUR'
                                 }
                             }
                         ]
-                    };
-
-
-                if(amount_tot > richest_amount){
-                    var post_json = {
-                        "nickname" : nickname,
-                        "description" : description,
-                        "amount" : amount_tot
-                    };
-
-                    $.ajax({
-                      type: "POST",
-                      url: "/newPayment",
-                      data: post_json,
-                      success: function(){
-                        console.log("POST SUCCESSFUL");
-                        }
-                    });
-                    console.log("POST DONE");
-                    return actions.payment.create(payment_json);
-                } else {
-                    console.log("Amount too low to execute transaction");
-                }
-
-            });
+                    }
+                    if(data.amount > data.oldAmount)
+                       return actions.payment.create(payment_json);
+                    else
+                        console.log("Amount too low to execute transaction");
+                });
         },
 
         onAuthorize: function(data, actions) {
@@ -142,5 +132,22 @@ function payment(todelete) {
         }
 
     }, '#paypal-button');
+
+    function callPayment(data){
+    
+        if(data.amount > data.oldAmount){
+            $.ajax({
+              type: "POST",
+              url: "/newPayment",
+              data: data,
+              success: function(){
+                console.log("POST SUCCESSFUL");
+                return true;
+                }
+            });
+            console.log("POST DONE");
+            return false;
+        }
+    }
     
 }
