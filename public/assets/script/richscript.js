@@ -65,6 +65,7 @@ var description;
 var nickname;
 var amount_tot;
 
+
 function payment(todelete) {
     destroy(todelete);
     $("#pay").delay(timeFade).fadeIn(timeFade);
@@ -123,8 +124,7 @@ function payment(todelete) {
         },
 
         onAuthorize: function(data, actions) {
-            return actions.payment.execute().then(function(payment) {
-            });
+            return actions.payment.execute();
         },
         onError: function(data, actions){
             console.log("ERRORRRRRR");
