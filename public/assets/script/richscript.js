@@ -6,10 +6,10 @@ function loadRichPerson() {
 
             '<p class="richest"> THE RICHEST </p>' +
 
-            data[0].Username + ' <div class="top_header_people">'
+            data.Username + ' <div class="top_header_people">'
 
             +
-            'paid <p class="payment">' + data[0].Donation + '€</p> saying <p class="payment">"' + data[0].Description + '"</p> <p>ARE YOU RICHER?</p></div>';
+            'paid <p class="payment">' + data.Donation + '€</p> saying <p class="payment">"' + data.Description + '"</p> <p>ARE YOU RICHER?</p></div>';
     });
 }
 
@@ -90,10 +90,11 @@ function payment(todelete) {
                 return (res.json());
             }).then(function(data){
 
-                richest_amount = data[0].Donation;
+                richest_amount = data.Donation;
                 amount_tot = $("#amount").val();
                 description = $("#description").val();
                 nickname = $("#nickname");
+                //email = $("#email");
 
                 var payment_json = {
                         transactions: [
@@ -105,10 +106,24 @@ function payment(todelete) {
                             }
                         ]
                     };
-                    //I'd do this in a different way: send the amount_tot value to server, the server checks, and then it
-                    //sends back the json ready for the payment transaction
+
+
                 if(amount_tot > richest_amount){
-                    console.log("EXECUTING PAYPAL REQUEST");
+                    var post_json = {
+                        "nickname" : nickname,
+                        "description" : description,
+                        "amount" : amount_tot
+                    };
+
+                    $.ajax({
+                      type: "POST",
+                      url: "/newPayment",
+                      data: post_json,
+                      success: function(){
+                        console.log("POST SUCCESSFUL");
+                        }
+                    });
+                    console.log("POST DONE");
                     return actions.payment.create(payment_json);
                 } else {
                     console.log("Amount too low to execute transaction");
@@ -119,25 +134,6 @@ function payment(todelete) {
 
         onAuthorize: function(data, actions) {
             return actions.payment.execute().then(function(payment) {
-                if(payment.transactions[0].amount.total == amount_tot){
-                    console.log("AUTHORIZED");
-                    var post_json = {
-                        "nickname" : nickname,
-                        "description" : description,
-                        "amount" : payment.transactions[0].amount.total
-                    }
-                    $.ajax({
-                      type: "POST",
-                      url: "/newPayment",
-                      data: post_json,
-                      success: function(){
-                        console.log("POST SUCCESSFUL");
-                        //SHOW A NICE PAGE
-                        }
-                    });
-                } else {
-                	//Handle the case where the store amount is different from the one actually paid here.
-                }
             });
         },
         onError: function(data, actions){
