@@ -70,12 +70,14 @@ function payment(todelete) {
     destroy(todelete);
     $("#pay").delay(timeFade).fadeIn(timeFade);
     paypal.Button.render({
+        /*
         env: 'sandbox', 
 
         client: {
             sandbox:    'AR3tVDwEoIYfSvwQ00Fd8hLxf-8_m_L_6kqYTaOz5LObRwTx4CXcfTpfk_Crm2dU-v1BAPtJAfi0MNe2',
             production: 'ATDvCZlE_JEUjw7tlwP-CZ5zlQ4P592fc2pLRK3_PmPVuFhaa0x6HCHNmFAuQ8LKfAB7as9nMxSunwGt'
         },
+        */
 
         commit: true, 
         style: {
@@ -85,42 +87,26 @@ function payment(todelete) {
             label: 'checkout'
         },
         locale: 'en_US',
+        payment: function() {
+            nickname = $("#nickname").val();
+            amount = $("#amount").val();
+            description = $("#description").val();
+            data = {
+                "nickname" : nickname,
+                "amount" : amount,
+                "description" : description
+            };
+            return new paypal.Promise(function(resolve, reject) {
 
-        payment: function(data, actions) {
-            return  fetch("/getRichest").then(function(res){
-                return (res.json());
-            }).then(function(data){
-
-                richest_amount = data.Donation;
-                amount_tot = $("#amount").val();
-                description = $("#description").val();
-                nickname = $("#nickname");
-                //email = $("#email");
-
-                    var post_json = {
-                        "nickname" : nickname,
-                        "description" : description,
-                        "amount" : amount_tot,
-                        "oldAmount" : richest_amount
-                    };
-                    //callPayment(data);
-                    return post_json;
-                }).then(function(data){
-                    var payment_json = {
-                        transactions: [
-                            {
-                                amount: {
-                                    total:    data.amount,
-                                    currency: 'EUR'
-                                }
-                            }
-                        ]
-                    }
-                    if(data.amount > data.oldAmount)
-                       return actions.payment.create(payment_json);
-                    else
-                        console.log("Amount too low to execute transaction");
+                // Call your server side to get the Payment ID from step 3, then pass it to the resolve callback
+                jQuery.post("/newPayment", data).done(function(data){
+                    console.log("HEI I GOT THE PAYMENT JSON = " + data);
+                    jQuery.post('https://www.my-paypal-store.com/my-api/payment-create')
+                    .done(function(data) {
+                        resolve(data.paymentID);
+                    });
                 });
+            });
         },
 
         onAuthorize: function(data, actions) {
