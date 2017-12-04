@@ -70,14 +70,6 @@ function payment(todelete) {
     destroy(todelete);
     $("#pay").delay(timeFade).fadeIn(timeFade);
     paypal.Button.render({
-        /*
-        env: 'sandbox', 
-
-        client: {
-            sandbox:    'AR3tVDwEoIYfSvwQ00Fd8hLxf-8_m_L_6kqYTaOz5LObRwTx4CXcfTpfk_Crm2dU-v1BAPtJAfi0MNe2',
-            production: 'ATDvCZlE_JEUjw7tlwP-CZ5zlQ4P592fc2pLRK3_PmPVuFhaa0x6HCHNmFAuQ8LKfAB7as9nMxSunwGt'
-        },
-        */
 
         commit: true, 
         style: {
@@ -101,10 +93,8 @@ function payment(todelete) {
                 // Call your server side to get the Payment ID from step 3, then pass it to the resolve callback
                 jQuery.post("/newPayment", data).done(function(data){
                     console.log("HEI I GOT THE PAYMENT JSON = " + data);
-                    jQuery.post('https://www.my-paypal-store.com/my-api/payment-create')
-                    .done(function(data) {
-                        resolve(data.paymentID);
-                    });
+                    parsed_data = JSON.parse(data);
+                    resolve(parsed_data['id']);
                 });
             });
         },

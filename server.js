@@ -50,9 +50,6 @@ app.post("/newPayment",function(req,res){
 	console.log("RECEIVING POST WITH AMOUNT = " + req.body.amount);
 
 	URL='https://api.sandbox.paypal.com/v1/oauth2/token';
-	CLIENT_ID='AR3tVDwEoIYfSvwQ00Fd8hLxf-8_m_L_6kqYTaOz5LObRwTx4CXcfTpfk_Crm2dU-v1BAPtJAfi0MNe2';
-	SECRET='ENjpFF8TF_8HntGXa1Ol-ofQiCEU5_xM6rewHl83yerp-wN9Btbqr3VGENl3Q4WFkSOPFLZKSdr5V6ER';
-
 
 	//GETTING THE RICHEST TO CHECK IF CAN EXECUTE PAYMENT
 	myNewQuery = sqlDb("donations").first().orderBy('donation','desc');
@@ -60,60 +57,50 @@ app.post("/newPayment",function(req,res){
    		return result;
    	}).then(function(data){
 
+
    		//CHECKING IF CAN EXECUTE PAYMENT
 		if(req.body.amount > data.Donation){
-			console.log("AMOUNT AUTHORIZED = " + data.Donation);
 
-			var response_json;
+	   		//CONFIGURE PAYMENY - PAYPAL PHASE 1
+			var first_config = {
+		    	'mode': 'sandbox',
+		    	'client_id': 'AR3tVDwEoIYfSvwQ00Fd8hLxf-8_m_L_6kqYTaOz5LObRwTx4CXcfTpfk_Crm2dU-v1BAPtJAfi0MNe2',
+		    	'client_secret': 'ENjpFF8TF_8HntGXa1Ol-ofQiCEU5_xM6rewHl83yerp-wN9Btbqr3VGENl3Q4WFkSOPFLZKSdr5V6ER'
+			};
 
-			//GETTING PAYPAL AUTHORIZATION WITH TOKEN 			
-			request.post({
-				headers : {"Accept": "application/json", "Accept-Language": "en_US"},
-				url : URL,
-				form : {CLIENT_ID:SECRET},
-				body : "grant_type=client_credentials"},
-				function(error,response,body){
-				console.log("STATUS CODE = " +  response.statusCode);
-				console.log("ERROR = " +  error);
-				console.log("BODY = " + JSON.stringify(body));
-				}
-			);
+			paypal.configure(first_config);
 
-			//CREATING DATA TO EXECUTE PAYMENT
-			URLPAY='https://api.paypal.com/v1/payments/payment';
-			//ACCESS_TOKEN = response_json.access_token;
+			console.log("AMOUNT AUTHORIZED = " + req.body.amount);
 
 			//CREATING PAYMENT
-			PAYMENT = JSON.stringify({
-		  		"intent": "sale",
-		  		"redirect_urls": {
-		    	"return_url": "...",
-		    	"cancel_url": "..."
-		  		},
-		  		"payer": {
-		    		"payment_method":"paypal"
-		  		},
-		  		"transactions": [
-		    		{
-		      			"amount":{
-		        		"total":req.body.amount,
-		        		"currency":"EUR"
-		      			}
-		    		}
-		  		]
-			}); /*
-			
-			request({
-				url : URLPAY,
-				method : "POST",
-				json : true,
-				body : PAYMENT
-				},	function(error, response, body){
-					if(!error && response.statusCode == 200){
-						console.log("SECOND POST SUCCESSFUL");
-					}
-				});*/
-			//MO DOVREMMO RITORNARE TUTTO E SPEDIRLO AL CLIENT
+			PAYMENT = {
+			    "intent": "sale",
+			    "payer": {
+			        "payment_method": "paypal"
+			    },
+			    "redirect_urls": {
+			        "return_url": "http://return.url",
+			        "cancel_url": "http://cancel.url"
+			    },
+			    "transactions": [{
+			        "amount": {
+			            "currency": "EUR",
+			            "total": req.body.amount
+			        },
+			        "description": "This is the payment description."
+			    }]
+			};
+
+
+			//CREATING PAYMENT AND SENDING IT TO THE CLIENT
+			paypal.payment.create(PAYMENT, function (error, payment) {
+			    if (error) {
+			        throw error;
+			    } else {
+			        console.log("Create Payment Response");
+			        res.send(JSON.stringify(payment));
+			    }
+			});
 		}
 	});
 
