@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const sqlDbFactory = require("knex");
 const paypal = require("paypal-rest-sdk");
-const $ = require("jQuery");
+const request = require("request");
 //Connecting to the .db file
 const sqlDb = sqlDbFactory({
     client: "sqlite3",
@@ -49,7 +49,7 @@ app.get("/getRichest", function(req, res) {
 app.post("/newPayment",function(req,res){
 	console.log("RECEIVING POST WITH AMOUNT = " + req.body.amount);
 
-	URL='https://api.paypal.com/v1/oauth2/token';
+	URL='https://api.sandbox.paypal.com/v1/oauth2/token';
 	CLIENT_ID='AR3tVDwEoIYfSvwQ00Fd8hLxf-8_m_L_6kqYTaOz5LObRwTx4CXcfTpfk_Crm2dU-v1BAPtJAfi0MNe2';
 	SECRET='ENjpFF8TF_8HntGXa1Ol-ofQiCEU5_xM6rewHl83yerp-wN9Btbqr3VGENl3Q4WFkSOPFLZKSdr5V6ER';
 
@@ -64,31 +64,24 @@ app.post("/newPayment",function(req,res){
 		if(req.body.amount > data.Donation){
 			console.log("AMOUNT AUTHORIZED = " + data.Donation);
 
-			//INITIALIZING CLIENT DATA TO RETRIEVE PAYMENT TOKEN FROM PAYPAL 
-			var user = CLIENT_ID + ":" + SECRET;
-			var get_token_json = JSON.stringify({ 
-				"user":  user ,
-			 	"data" : "grant_type=client_credentials"
-			});
-
 			var response_json;
 
 			//GETTING PAYPAL AUTHORIZATION WITH TOKEN 			
-			$.ajax({
-			 	type: "POST",
-			  	url: URL,
-			  	data : get_token_json,
-			  	success: function(response){
-			  		response_json = response;
-			  		console.log("FIRST POST TO PAYPAL SUCCESS WITH RESPONSE = " + response);
+			request.post({
+				headers : {"Accept": "application/json", "Accept-Language": "en_US"},
+				url : URL,
+				form : {CLIENT_ID:SECRET},
+				body : "grant_type=client_credentials"},
+				function(error,response,body){
+				console.log("STATUS CODE = " +  response.statusCode);
+				console.log("ERROR = " +  error);
+				console.log("BODY = " + JSON.stringify(body));
 				}
-			}); 
-
-			console.log("DONE POST TO PAYPAL AND RETRIEVED AUTHORIZATION = " + response_json);
+			);
 
 			//CREATING DATA TO EXECUTE PAYMENT
 			URLPAY='https://api.paypal.com/v1/payments/payment';
-			ACCESS_TOKEN = response_json.access_token;
+			//ACCESS_TOKEN = response_json.access_token;
 
 			//CREATING PAYMENT
 			PAYMENT = JSON.stringify({
@@ -108,16 +101,18 @@ app.post("/newPayment",function(req,res){
 		      			}
 		    		}
 		  		]
-			});
+			}); /*
 			
-			$.ajax({
-			 	type: "POST",
-			  	url: URLPAY,
-			  	data : PAYMENT,
-			  	success: function(response){
-			  		console.log("DONE SECOND POST WITH RESPONSE " + response);
-				}
-			});
+			request({
+				url : URLPAY,
+				method : "POST",
+				json : true,
+				body : PAYMENT
+				},	function(error, response, body){
+					if(!error && response.statusCode == 200){
+						console.log("SECOND POST SUCCESSFUL");
+					}
+				});*/
 			//MO DOVREMMO RITORNARE TUTTO E SPEDIRLO AL CLIENT
 		}
 	});
