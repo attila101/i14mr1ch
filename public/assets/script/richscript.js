@@ -71,6 +71,7 @@ function payment(todelete) {
     $("#pay").delay(timeFade).fadeIn(timeFade);
     paypal.Button.render({
 
+        env : 'sandbox',
         commit: true, 
         style: {
             size: 'medium',
@@ -100,6 +101,9 @@ function payment(todelete) {
         },
 
         onAuthorize: function(data, actions) {
+            //console.log("JSON = " + JSON.stringify(actions.payment.getTransactions()[0]));
+            //console.log("TRANSACTION =  " + actions.payment.getTransactions()[0])
+            console.log("PAYMENT SUCCESSFUL");
             return actions.payment.execute();
         },
         onError: function(data, actions){
@@ -109,21 +113,5 @@ function payment(todelete) {
 
     }, '#paypal-button');
 
-    function callPayment(data){
-    
-        if(data.amount > data.oldAmount){
-            $.ajax({
-              type: "POST",
-              url: "/newPayment",
-              data: data,
-              success: function(){
-                console.log("POST SUCCESSFUL");
-                return true;
-                }
-            });
-            console.log("POST DONE");
-            return false;
-        }
-    }
     
 }
